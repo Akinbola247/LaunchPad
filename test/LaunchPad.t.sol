@@ -20,8 +20,8 @@ contract LaunchPadTest is Test {
         vm.deal(0xBB9F947cB5b21292DE59EFB0b1e158e90859dddb, 5 ether);
         kznttoken = new KZNToken("KZTtoken", "KZT");
         // launchpad = new LaunchPad(IERC20(kznttoken));
-        factory = new LauchpadFactory(IERC20(kznttoken));
-        childContract = factory.DeployContract(address(0xBB9F947cB5b21292DE59EFB0b1e158e90859dddb));
+        factory = new LauchpadFactory();
+        childContract = factory.DeployLaunchPad(address(kznttoken),address(0xBB9F947cB5b21292DE59EFB0b1e158e90859dddb));
 
     }
 
