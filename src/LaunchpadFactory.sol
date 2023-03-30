@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import {LaunchPad} from "src/launchpad.sol";
+import "src/launchpad.sol";
 import "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-contract lauchpadFactory {
+contract LauchpadFactory {
     address overallAdmin;
     LaunchPad[] deployedContracts;
     IERC20 token;
@@ -13,8 +13,8 @@ contract lauchpadFactory {
     token = _token;
 }
 
-    function DeployContract() public returns(LaunchPad){
-            LaunchPad newContract = new LaunchPad(token);                        
+    function DeployContract(address _admin) public returns(LaunchPad){
+            LaunchPad newContract = new LaunchPad(token, _admin);                        
             deployedContracts.push(newContract);
             emit check(newContract);
             return newContract;

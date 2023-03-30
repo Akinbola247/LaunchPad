@@ -12,9 +12,9 @@ struct DepositTime{
 }
 DepositTime depositTime;
 
-constructor(IERC20 _KZNTtoken){
+constructor(IERC20 _KZNTtoken, address _admin){
     KZNTtoken = _KZNTtoken;
-    admin = msg.sender;
+    admin = _admin;
 }
 function OpenDeposit() public {
     require(msg.sender == admin, "not Authorized");
@@ -22,6 +22,16 @@ function OpenDeposit() public {
     depositTime.startTime = start;
     depositTime.endTime = start + 2 weeks;
     depositTime.depositStatus = true;
+}
+function ExtendDeposit() public {
+    require(msg.sender == admin, "not Authorized");
+    require(depositTime.endTime < block.timestamp, "deposit in progress");
+    depositTime.endTime = block.timestamp + 1 weeks;
+}
+function ManualEndDeposit() public {
+    require(msg.sender == admin, "not Authorized");
+    require(depositTime.endTime > block.timestamp, "deposit already ended");
+    depositTime.endTime = block.timestamp;
 }
 function DepositEth() public payable {
     uint balance = (msg.sender).balance;
@@ -33,7 +43,8 @@ function DepositEth() public payable {
     (bool sent, ) = payable(address(this)).call{value: msg.value}("");
     require(sent, "sendng failed");
     EthAmountDeposited[msg.sender] = msg.value;
-    KZNTtoken.transfer(msg.sender, (msg.value * 50/100));
+    uint tokenToreceive = calculateToken(msg.value);
+    KZNTtoken.transfer(msg.sender, tokenToreceive);
 }
 
 function withdrawEth() public {
@@ -43,6 +54,9 @@ function withdrawEth() public {
     require(sent, "ether not sent");
 }
 
+function calculateToken(uint _amount) internal pure returns(uint calculated){
+    calculated = (_amount * 40/100);
+}
 receive() external payable{}
 fallback() external payable{}
 }
