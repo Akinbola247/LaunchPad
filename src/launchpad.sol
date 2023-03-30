@@ -1,10 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
-
-//users should be able to deposit token eth
-// make sure they get 50% of the native token
-//specify start time and end time
-
 import "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 contract LaunchPad {
 address admin;
@@ -37,8 +32,8 @@ function DepositEth() public payable {
     require(msg.value != 0, "input an amount");
     (bool sent, ) = payable(address(this)).call{value: msg.value}("");
     require(sent, "sendng failed");
-    KZNTtoken.transferFrom(address(this), msg.sender, (msg.value/2));
     EthAmountDeposited[msg.sender] = msg.value;
+    KZNTtoken.transfer(msg.sender, (msg.value * 50/100));
 }
 
 function withdrawEth() public {
