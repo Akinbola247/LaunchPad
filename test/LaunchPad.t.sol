@@ -29,15 +29,26 @@ contract LaunchPadTest is Test {
         kznttoken.mintsupply(address(childContract), 50);
         // launchpad.OpenDeposit();
         IlaunchPad(address(childContract)).OpenDeposit();
-        vm.stopPrank();
+        
     }
 
     function testDepositEth() public {
         testOpenDeposit();
+            // vm.warp(5 weeks);
+        // IlaunchPad(address(childContract)).ManualEndDeposit();
+        // IlaunchPad(address(childContract)).ExtendDeposit();
+        vm.stopPrank();
         vm.startPrank(address(0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC));
         vm.deal(address(0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC), 5 ether);
         IlaunchPad(address(childContract)).DepositEth{value: 1 ether }();
         kznttoken.balanceOf(address(0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC));
+        vm.stopPrank();
+    }
+    function testWithdrawEth() public {
+        testDepositEth();
+        vm.startPrank(address(0xBB9F947cB5b21292DE59EFB0b1e158e90859dddb));
+        vm.deal(address(0xBB9F947cB5b21292DE59EFB0b1e158e90859dddb), 5 ether);
+        IlaunchPad(address(childContract)).withdrawEth();
         vm.stopPrank();
     }
 }

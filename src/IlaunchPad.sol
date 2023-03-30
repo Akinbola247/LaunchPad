@@ -5,4 +5,6 @@ interface IlaunchPad {
     function OpenDeposit() external;
     function DepositEth() payable external ;
     function withdrawEth() external;
+    function ManualEndDeposit() external;
+    function ExtendDeposit() external;
 }

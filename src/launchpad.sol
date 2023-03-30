@@ -32,12 +32,13 @@ function ManualEndDeposit() public {
     require(msg.sender == admin, "not Authorized");
     require(depositTime.endTime > block.timestamp, "deposit already ended");
     depositTime.endTime = block.timestamp;
+    depositTime.depositStatus = false;
 }
 function DepositEth() public payable {
     uint balance = (msg.sender).balance;
     require(depositTime.depositStatus == true, "not started");
     require(depositTime.startTime <= block.timestamp, "not commenced");
-    require(block.timestamp <= depositTime.endTime, "deposit ended");
+    require(block.timestamp < depositTime.endTime, "deposit ended");
     require(balance != 0, "low eth balance");
     require(msg.value != 0, "input an amount");
     (bool sent, ) = payable(address(this)).call{value: msg.value}("");
